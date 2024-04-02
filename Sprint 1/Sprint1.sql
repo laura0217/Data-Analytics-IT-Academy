@@ -5,26 +5,32 @@
  --No hay queries, se ejecutan las sql de los ficheros proporcionados --
  
 -- Ejercici 2 
-select company_name, email, country from company order by company_name
+SELECT company_name, email, country 
+FROM company 
+ORDER BY company_name
 
 -- Ejercici 3
-select distinct (country) from company c inner join transaction t
-on c.id=t.company_id
+SELECT DISTINCT country 
+FROM company c INNER JOIN transaction t
+ON c.id=t.company_id
 
 -- Ejercici 4
-select count(distinct (country)) as numPaisos from company c inner join transaction t
-on c.id=t.company_id
+SELECT COUNT(DISTINCT country) AS numPaisos 
+FROM company c INNER JOIN transaction t
+ON c.id=t.company_id
 
 
 -- Ejercici 5
-select company_name,country from company
-where id='b-2354'
+SELECT company_name,country 
+FROM company
+WHERE id='b-2354'
 
 -- Ejercici 6
-select  company_name ,avg (amount) from company c inner join transaction t
-on c.id=t.company_id
-group by company_name
-limit 1
+SELECT company_name, AVG (amount) 
+FROM company c INNER JOIN transaction t
+ON c.id=t.company_id
+GROUP BY company_name
+LIMIT 1
 
 
 ------------------------  
@@ -32,28 +38,31 @@ limit 1
 ------------------------
 
 -- Ejercici 1 
-select  id, count(id) from company 
-group by id
-having count(id) >1
+SELECT id, count(id) 
+FROM company 
+GROUP BY id
+HAVING count(id) > 1
 
 -- Ejercici 2
-select date(timestamp) as fecha, sum(amount)as ventas from transaction 
-group by fecha
-order by ventas desc
-limit 5
+SELECT DATE(timestamp) AS fecha, SUM(amount) AS ventas 
+FROM transaction 
+GROUP BY fecha
+ORDER BY ventas desc
+LIMIT 5
 
 -- Ejercici 3
-select date(timestamp) as fecha, sum(amount)as ventas from transaction 
-group by fecha
-order by ventas 
-limit 5
+SELECT DATE(timestamp) AS fecha, SUM(amount) AS ventas 
+FROM transaction 
+GROUP BY fecha
+ORDER BY ventas 
+LIMIT 5
 
 -- Ejercici 4
-select country, avg(amount)as ventas 
-from company c inner join transaction t
-on c.id=t.company_id
+SELECT country, AVG(amount) AS ventas 
+FROM company c INNER JOIN transaction t
+ON c.id=t.company_id
 group by country
-order by ventas desc
+ORDER BY ventas DESC
 
 ------------------------ 
 --     Nivel 3        --
@@ -61,16 +70,15 @@ order by ventas desc
 
 -- Ejercici 1 
 
-select company_name, phone, country, sum(amount)as vendes 
-from company c inner join transaction t
-on c.id=t.company_id
-group by company_name, phone, country
-having sum(amount) between 100 and 200
-order by vendes desc
+SELECT company_name, phone, country, amount 
+FROM company c INNER JOIN transaction t
+ON c.id=t.company_id
+WHERE amount BETWEEN 100 AND 200
+ORDER BY amount DESC
 
 
 -- Ejercici 2
-select company_name, date(timestamp) as fecha
-from company c inner join transaction t
-on c.id=t.company_id
-having fecha in ('2022-03-16','2022-02-18','2022-02-13')
+SELECT company_name, DATE(timestamp) AS fecha
+FROM company c INNER JOIN transaction t
+ON c.id=t.company_id
+HAVING fecha IN ('2022-03-16','2022-02-18','2022-02-13')
