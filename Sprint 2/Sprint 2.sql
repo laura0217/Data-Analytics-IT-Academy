@@ -8,31 +8,32 @@
 ------------------------
 -- Ejercici 1 
 
-	Select * from transaction 
-	where company_id in 
-	(select id from company c where country= "Germany") 
+	SELECT * FROM transaction 
+	WHERE company_id IN 
+	(SELECT id FROM company c WHERE country= "Germany") 
 
  
 -- Ejercici 2 
-	select company_name, sum(amount) 
-	from company inner join transaction 
-	on company.id=transaction.company_id
-	group by company_name 
-	having sum(amount)> (
-	Select avg(amount) from transaction)
+	SELECT company_name, SUM(amount) 
+	FROM company inner join transaction 
+	ON company.id=transaction.company_id
+	GROUP BY company_name 
+	HAVING SUM(amount)> (
+	SELECT AVG(amount) FROM transaction)
 
 
 -- Ejercici 3
 
-	Select company_id,credit_card_id, timestamp, amount,declined from transaction 
-	where company_id in 
-	(select id from company c where upper(company_name) like 'C%') 
+	SELECT company_id,credit_card_id, timestamp, amount,declined FROM transaction 
+	WHERE company_id IN 
+	(SELECT id FROM company c WHERE upper(company_name) like 'C%') 
 
 
 -- Ejercici 4
 
-	Select * from company 
-	where id not in ( select company_id from transaction)
+	SELECT * FROM company 
+	WHERE id not IN ( 
+		SELECT company_id FROM transaction)
 
 
 
@@ -42,18 +43,18 @@
 
 -- Ejercici 1 
 
-	select * from transaction where company_id in 
-	(select id from company where country in 
-	   (Select country from company where company_name='Non Institute')
+	SELECT * FROM transaction WHERE company_id IN 
+	(SELECT id FROM company WHERE country IN 
+	   (SELECT country FROM company WHERE company_name='Non Institute')
 	)
 
 
 -- Ejercici 2
 
-	select company_id,company_name, amount 
-	from company inner join transaction 
-	on company.id=transaction.company_id
-	and amount =(select max(amount) from transaction) 
+	SELECT company_id,company_name, amount 
+	FROM company, transaction 
+	WHERE company.id=transaction.company_id
+	AND amount =(SELECT max(amount) FROM transaction)
 
 
 
@@ -63,18 +64,18 @@
 
 -- Ejercici 1 
 
-	select avg (amount), country  
-	from company inner join transaction 
-	on company.id=transaction.company_id
-	group by country
-	having avg(amount) > (select avg(amount) from transaction)
+	SELECT AVG (amount) as avgAmount, country  
+	FROM company, transaction 
+	WHERE company.id=transaction.company_id
+	GROUP BY country
+	HAVING AVG(amount) > (SELECT AVG(amount) FROM transaction)
 
 
 -- Ejercici 2
 
-select company_name, if (numTrans>4, "Más de 4" , "Menos") as Trans, numTrans from (
-	select  company_name, count(t.id) as numTrans
-	from company c inner join transaction t
-	on c.id=company_id
-	group by company_name
+SELECT company_name, if (numTrans>4, "Más de 4" , "Menos") as Trans, numTrans FROM (
+	SELECT  company_name, count(t.id) as numTrans
+	FROM company c inner join transaction t
+	ON c.id=company_id
+	GROUP BY company_name
 ) as t1
