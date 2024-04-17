@@ -8,17 +8,24 @@
 ------------------------
 
 -- Ejercici 1 
-	SELECT id, name, surname, (SELECT COUNT(*) as trans FROM transactions t2 WHERE user_id=u.id ) numTrans 
+	SELECT id, name, surname, (
+								SELECT COUNT(*) as trans 
+								FROM transactions t2 
+								WHERE user_id=u.id ) AS numTrans 
 	FROM users u 
 	HAVING numTrans >30
 
  
 -- Ejercici 2 
 
-	SELECT iban,AVG(amount) as avgAmount,company_id FROM transactions t INNER JOIN credit_cards cc
+	SELECT iban, AVG(amount) AS avgAmount, company_id 
+	FROM transactions t 
+	INNER JOIN credit_cards cc
 	ON t.card_id=cc.id
-	WHERE company_id=(SELECT id FROM companies WHERE company_name='Donec Ltd' )
-	GROUP BY cc.iban,company_id
+	WHERE company_id=(SELECT id 
+					  FROM companies 
+					  WHERE company_name='Donec Ltd' )
+	GROUP BY cc.iban, company_id
 
 
 
@@ -30,8 +37,8 @@
 	-- Creació de la taula --
 
 	CREATE TABLE `active_cards` (
-	   `card_id` varchar(15) NOT NULL,
-	   `declined` tinyint DEFAULT NULL, 
+	   `card_id` VARCHAR(15) NOT NULL,
+	   `declined` TINYINT DEFAULT NULL, 
 	   PRIMARY KEY (`card_id`),
 	   CONSTRAINT `active_cards_ibfk_1` FOREIGN KEY (`card_id`) REFERENCES `credit_cards` (`id`)
 	 ) ;
@@ -50,11 +57,11 @@
 
 	   DECLARE SumDeclined INT;
 	   
-		SELECT sum(declined) INTO SumDeclined FROM  (
-			select t.card_id,timestamp,declined from transactions  t
-			where t.card_id=idCard
-			order by t.card_id,timestamp desc  
-			limit 3) s;
+		SELECT SUM(declined) INTO SumDeclined FROM (
+			SELECT t.card_id,timestamp,declined from transactions  t
+			WHERE t.card_id=idCard
+			ORDER BY t.card_id,timestamp DESC  
+			LIMIT 3) s;
 
 	   RETURN SumDeclined;
 
@@ -108,8 +115,10 @@
 		DECLARE inumComas INT;
 		DECLARE i INT;
 		DECLARE var_final INT DEFAULT 0;
-		DECLARE cur1 CURSOR FOR SELECT id,product_ids, ((LENGTH(product_ids)) - length((REPLACE(product_ids,",",""))) ) as numComas 
-								FROM transactions WHERE id not in (select transaction_id from product_transac);
+		DECLARE cur1 CURSOR FOR SELECT id,product_ids, ((LENGTH(product_ids)) - LENGTH((REPLACE(product_ids,",",""))) ) AS numComas 
+								FROM transactions 
+								WHERE id NOT IN (SELECT transaction_id 
+												 FROM product_transac);
 		DECLARE CONTINUE HANDLER FOR NOT FOUND SET var_final = 1;
 		
 		OPEN cur1;
