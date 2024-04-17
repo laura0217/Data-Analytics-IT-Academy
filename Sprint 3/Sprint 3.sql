@@ -27,9 +27,13 @@
  
 -- Ejercici 2 
 
-	SELECT id,IBAN from credit_card WHERE id='CcU-2938';  -- Comprovar el valor del camp IBAN
+	SELECT id,IBAN 
+	FROM credit_card 
+	WHERE id='CcU-2938';  -- Comprovar el valor del camp IBAN
 
-	UPDATE credit_card SET IBAN='R323456312213576817699999' WHERE id='CcU-2938';  -- Modificar el valor del camp IBAN
+	UPDATE credit_card 
+	SET IBAN='R323456312213576817699999' 
+	WHERE id='CcU-2938';  -- Modificar el valor del camp IBAN
 
 
 -- Ejercici 3
@@ -56,9 +60,11 @@
 
 -- Ejercici 1 
 
-	SELECT * FROM transaction WHERE id='02C6201E-D90A-1859-B4EE-88D2986D3B02' 	-- Comprovar si existeix el registre
+	SELECT * 
+	FROM transaction 
+	WHERE id='02C6201E-D90A-1859-B4EE-88D2986D3B02' 	-- Comprovar si existeix el registre
 	
-	DELETE FROM transaction  WHERE id='02C6201E-D90A-1859-B4EE-88D2986D3B02'	-- Eliminar el registre
+	DELETE FROM transaction WHERE id='02C6201E-D90A-1859-B4EE-88D2986D3B02'	-- Eliminar el registre
 	
 	ALTER TABLE user DROP FOREIGN KEY user_ibfk_1;								-- Eliminar FOREIGN KEY
 	
@@ -116,5 +122,7 @@
 		INNER JOIN company co ON t.company_id = co.id
 		
 		
-	SELECT * FROM InformeTecnico ORDER BY idTransac DESC					-- Mostrar dades vista	
+	SELECT * 
+	FROM InformeTecnico 
+	ORDER BY idTransac DESC					-- Mostrar dades vista	
 	
