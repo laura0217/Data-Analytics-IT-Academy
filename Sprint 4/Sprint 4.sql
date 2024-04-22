@@ -7,6 +7,141 @@
 --     Nivel 1        --
 ------------------------
 
+------ Creació base de dades ------
+
+CREATE database new_transactions;
+
+USE new_transactions;
+
+CREATE TABLE companies (
+   id VARCHAR(15) NOT NULL,
+   company_name VARCHAR(255) DEFAULT NULL,
+   phone VARCHAR(15) DEFAULT NULL,
+   email VARCHAR(100) DEFAULT NULL,
+   country VARCHAR(100) DEFAULT NULL,
+   website VARCHAR(100) DEFAULT NULL,
+   PRIMARY KEY (id)
+ );
+
+  
+  CREATE TABLE credit_cards (
+  id VARCHAR(15) NOT NULL,
+  user_id INT NOT NULL,
+  iban VARCHAR(50) DEFAULT NULL,
+  pan VARCHAR(20) DEFAULT NULL,
+  pin VARCHAR(4) DEFAULT NULL,
+  cvv INT DEFAULT NULL,
+  track1 VARCHAR(50) DEFAULT NULL,
+  track2 VARCHAR(50) DEFAULT NULL,
+  expiring_date VARCHAR(10) DEFAULT NULL,
+  PRIMARY KEY (id)
+) 
+
+ CREATE TABLE products (
+   id INT NOT NULL,
+   product_name VARCHAR(100) DEFAULT NULL,
+  `price` VARCHAR(20) DEFAULT NULL,
+  `colour` VARCHAR(7) DEFAULT NULL,
+  `weight` FLOAT DEFAULT NULL,
+  `warehouse_id` VARCHAR(10) DEFAULT NULL,
+   PRIMARY KEY (id)
+ );
+ 
+CREATE TABLE users (
+  id INT NOT NULL,
+  name VARCHAR(100) DEFAULT NULL,
+  surname VARCHAR(100) DEFAULT NULL,
+  phone VARCHAR(150) DEFAULT NULL,
+  email VARCHAR(150) DEFAULT NULL,
+  birth_date VARCHAR(100) DEFAULT NULL,
+  country VARCHAR(150) DEFAULT NULL,
+  city VARCHAR(150) DEFAULT NULL,
+  postal_code VARCHAR(100) DEFAULT NULL,
+  address VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (id)
+) 
+
+ CREATE TABLE transactions (
+  id VARCHAR(255) NOT NULL,
+  card_id VARCHAR(15) DEFAULT NULL,
+  company_id VARCHAR(15) DEFAULT NULL,
+  timestamp TIMESTAMP NULL DEFAULT NULL,
+  amount DECIMAL(10,2) DEFAULT NULL,
+  declined TINYINT DEFAULT NULL,
+  product_ids VARCHAR(100) DEFAULT NULL,
+  user_id INT DEFAULT NULL,
+  lat FLOAT DEFAULT NULL,
+  longitude FLOAT DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY idx_company_id (company_id),
+  KEY idx_user_id (user_id),
+  KEY idx_card_id (card_id),
+  CONSTRAINT transaction_ibfk_1 FOREIGN KEY (company_id) REFERENCES companies (id),
+  CONSTRAINT transaction_ibfk_2 FOREIGN KEY (card_id) REFERENCES credit_cards (id),
+  CONSTRAINT transaction_ibfk_3 FOREIGN KEY (user_id) REFERENCES users (id)
+) ;
+
+ 
+ 
+
+
+------   Fi Creació   -------------
+
+-- Pujar les dades ---
+
+	SHOW VARIABLES LIKE "secure_file_priv";  -- path per deixar els fitxers
+	SET GLOBAL LOCAL_INFILE = TRUE;  		-- Canvi seguretat
+	 
+	LOAD DATA LOCAL INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/companies.csv"
+	INTO TABLE companies
+	FIELDS TERMINATED BY ',';
+	IGNORE 1 LINES;
+ 
+	LOAD DATA LOCAL INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/credit_cards.csv"
+	INTO TABLE credit_cards
+	FIELDS TERMINATED BY ','
+	IGNORE 1 LINES;
+ 
+	LOAD DATA LOCAL INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/products.csv"
+	INTO TABLE products
+	FIELDS TERMINATED BY ','
+	IGNORE 1 LINES;
+
+	
+	LOAD DATA LOCAL INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_ca.csv"
+	INTO TABLE users
+	FIELDS TERMINATED BY ','
+	OPTIONALLY ENCLOSED by '"'
+	ESCAPED BY '"'
+	LINES TERMINATED BY '\r\n'
+	IGNORE 1 LINES;
+
+	
+	LOAD DATA LOCAL INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_usa.csv"
+	INTO TABLE users
+	FIELDS TERMINATED BY ','
+	OPTIONALLY ENCLOSED by '"'
+	ESCAPED BY '"'
+	LINES TERMINATED BY '\r\n'
+	IGNORE 1 LINES;
+
+
+	LOAD DATA LOCAL INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/users_uk.csv"
+	INTO TABLE users
+	FIELDS TERMINATED BY ','
+	OPTIONALLY ENCLOSED by '"'
+	ESCAPED BY '"'
+	LINES TERMINATED BY '\r\n'
+	IGNORE 1 LINES;
+
+
+	LOAD DATA LOCAL INFILE "C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/transactions.csv"
+	INTO TABLE transactions
+	FIELDS TERMINATED BY ';'
+	ESCAPED BY '"'
+	IGNORE 1 LINES;
+ 
+
 -- Ejercici 1 
 	SELECT id, name, surname, (
 								SELECT COUNT(*) as trans 
@@ -148,9 +283,10 @@
 
 -- Ejercici 1 
 
-	SELECT product_name, count(pt.id) as sold_units FROM product_transac pt 
-	INNER JOIN products p ON pt.product_id=p.id
+	SELECT product_name, COUNT(pt.id) AS sold_units 
+	FROM product_transac pt 
+	INNER JOIN products p ON pt.product_id = p.id
 	GROUP BY product_name
-	ORDER BY sold_units desc
+	ORDER BY sold_units DESC
 
 
